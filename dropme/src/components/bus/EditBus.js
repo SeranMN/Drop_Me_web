@@ -37,13 +37,20 @@ const statuses = [
 ]
 
 
-export default function Add({handleOpen,handleClose,setToggle,toggle,open,setOpen}) {  
+export default function EditBus({setToggle,toggle,data}) {  
 
-  const [busNo, setBusNo] = React.useState('')
-  const [busName, setBusName] = React.useState('');
-  const [model, setbusmodel] = React.useState('');
-  const [capacity, setCapacity] = React.useState('');
-  const [status, setStatus] = React.useState('')
+  const [busNo, setBusNo] = React.useState(data? data.BusNo : '')
+  const [busName, setBusName] = React.useState(data? data.BusName : '');
+  const [model, setbusmodel] = React.useState(data? data.Model : '');
+  const [capacity, setCapacity] = React.useState(data? data.Capacity : '');
+  const [status, setStatus] = React.useState(data? data.Status : '')
+  const [open1, setOpen1] = React.useState(false)
+
+  const handleOpen1 = () =>{ 
+    setOpen1(true)
+  }
+
+  const handleClose1 = () => setOpen1(false);
 
   const onSubmit = (e) => {
     const bus = {
@@ -56,11 +63,11 @@ export default function Add({handleOpen,handleClose,setToggle,toggle,open,setOpe
 
     console.log('bus',bus)
 
-    axios.post('http://localhost:5000/bus/add', bus)
+    axios.put(`http://localhost:5000/bus/edit/${data._id}`, bus)
       .then(() => {
-        alert('Added successfully')
+        alert('Edited successfully')
         setToggle(!toggle)
-        handleClose()
+        handleClose1()
       })
       .catch((err) => console.log(err))
   }
@@ -76,17 +83,17 @@ export default function Add({handleOpen,handleClose,setToggle,toggle,open,setOpe
 
   return (
     <div>
-      <Button onClick={handleOpen} variant="contained" startIcon={<AddIcon />} >Add new</Button>
+      <Button onClick={handleOpen1} variant='contained'>Edit</Button>
       <Modal
         keepMounted
-        open={open}
-        onClose={handleClose}
+        open={open1}
+        onClose={handleClose1}
         aria-labelledby="keep-mounted-modal-title"
         aria-describedby="keep-mounted-modal-description"
       >
         <Box sx={style}>
           <Typography sx={{ color: 'blue' }} id="keep-mounted-modal-title" variant="h6" align='center' component="h2">
-            Add Bus
+            Edit Bus
           </Typography>
             <TextField sx={{ width: '100%' }} InputProps={{ sx: { height: 40 } }} onChange={(e) => { setBusNo(e.target.value) }} label='Bus No' margin="normal" variant="outlined" value={busNo} />
             <TextField sx={{ width: '100%' }} InputProps={{ sx: { height: 40 } }} onChange={(e) => { setBusName(e.target.value) }} margin="normal" label="Bus Name" variant="outlined" value={busName} />
@@ -112,7 +119,7 @@ export default function Add({handleOpen,handleClose,setToggle,toggle,open,setOpe
             </TextField>
             <Box sx={{display:'flex', justifyContent:'space-around'}}>
               <Button variant='contained' onClick={handleClear}>Clear</Button>
-              <Button type='submit' variant='contained' onClick={onSubmit}>Submit</Button>
+              <Button type='submit' variant='contained' onClick={onSubmit}>Edit</Button>
             </Box>
         </Box>
 

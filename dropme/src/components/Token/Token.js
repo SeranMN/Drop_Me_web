@@ -1,13 +1,13 @@
 import React from 'react'
 import { Outlet } from 'react-router';
 
-const AdminDashboard = () => {
+const Token = () => {
     return (
         <>
-            <div>AdminDashboard</div>
+            <div>Token</div>
             <Outlet />
         </>
     )
 }
 
-export default AdminDashboard
+export default Token
