@@ -11,6 +11,7 @@ import Timetable from './Timetable/Timetable';
 import Journey from './Journey/Journey';
 import Token from './Token/Token';
 import Report from './Report/Report';
+import BusRoutes from './Routes/BusRoutes';
 
 const Routing = () => {
   return (
@@ -21,7 +22,7 @@ const Routing = () => {
           <Route element={<Header />}>
             <Route path='/' exact element={<AdminDashboard />} />
             <Route path='/buses' exact element={<View />} />
-            <Route path='/routes' exact element={<Routes/>} />
+            <Route path='/routes' exact element={<BusRoutes/>} />
             <Route path='/timetable' exact element={<Timetable />} />
             <Route path='/journey' exact element={<Journey />} />
             <Route path='/token' exact element={<Token/>} />
