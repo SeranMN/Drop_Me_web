@@ -11,23 +11,17 @@ import { Box, Button } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import axios from 'axios'
 import { margin } from '@mui/system';
-import Add from './Add';
 import InputBase from '@mui/material/InputBase';
 import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
-import EditBus from './EditBus';
-import BusDeleteDialog from './BusDeleteDialog';
+import AddBusRoute from './AddBusRoute';
+import EditRoute from './EditRoute';
+import RouteDeleteDialog from './RouteDeleteDialog';
 
-const View = () => {
+const BusRoutes = () => {
 
-  const [open, setOpen] = useState(false)
-
+  const [busRoutes,setBusRoutes] = useState([])
   const [toggle, setToggle] = useState(false)
-
-  const handleOpen = (row) =>{ 
-    setOpen(true)
-  }
-  const handleClose = () => setOpen(false);
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -49,16 +43,18 @@ const View = () => {
     },
   }));
 
-  const [buses, setBuses] = useState([])
   useEffect(() => {
-    axios.get('http://localhost:5000/bus/')
-      .then((res) => { setBuses(res.data) })
+    axios.get('http://localhost:5000/route/')
+      .then((res) => { 
+        setBusRoutes(res.data) 
+        console.log('res.data',res.data)
+      })
       .catch((err) => console.log(err))
   }, [toggle])
 
   return (
     <div style={{marginTop:'20px'}}>
-      <Typography sx={{ color: 'blue' }} variant='h4' align='center'>Dashboard - Manage Buses</Typography>
+      <Typography sx={{ color: 'blue' }} variant='h4' align='center'>Dashboard - Manage Route</Typography>
       <Paper
         component="form"
         sx={{ p: '1px 1px', m: 'auto', width: 400, borderRadius: '24px' }}
@@ -74,48 +70,46 @@ const View = () => {
         />
       </Paper>
       <Box sx={{ mx: '25px', display: 'flex', justifyContent: 'flex-end' }}>
-        <Add handleOpen={handleOpen} handleClose={handleClose} setToggle={setToggle} toggle={toggle} setOpen={setOpen} open={open} />
+        <AddBusRoute setToggle={setToggle} toggle={toggle} />
       </Box>
 
       <TableContainer component={Paper}>
         <Table sx={{ width: '95%', marginTop: 5, marginLeft: 5 }} aria-label="customized table">
           <TableHead>
             <TableRow>
-              <StyledTableCell>Bus Number</StyledTableCell>
               <StyledTableCell>Route No</StyledTableCell>
-              <StyledTableCell>Bus Name</StyledTableCell>
-              <StyledTableCell >Model</StyledTableCell>
-              <StyledTableCell >Capacity</StyledTableCell>
-              <StyledTableCell >Status</StyledTableCell>
+              <StyledTableCell >Departure from</StyledTableCell>
+              <StyledTableCell >Arrival to</StyledTableCell>
+              <StyledTableCell >Cost</StyledTableCell>
               <StyledTableCell >Action</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {buses.map((row) => (
-              <StyledTableRow key={row._id}>
+           {busRoutes.map((busRoute) => (
+              <StyledTableRow key={busRoute._id}>
                 <StyledTableCell >
-                  {row.BusNo}
+                  {busRoute.routeNo}
                 </StyledTableCell>
-                <StyledTableCell >{row.routeNo}</StyledTableCell>
-                <StyledTableCell >{row.BusName}</StyledTableCell>
-                <StyledTableCell >{row.Model}</StyledTableCell>
-                <StyledTableCell>{row.Capacity}</StyledTableCell>
-                <StyledTableCell >{row.Status}</StyledTableCell>
+                <StyledTableCell >{busRoute.Town1}</StyledTableCell>
+                <StyledTableCell >{busRoute.Town2}</StyledTableCell>
+                <StyledTableCell >{busRoute.cost}</StyledTableCell>
+                {/* <StyledTableCell >{busRoute.Status}</StyledTableCell> */}
                 <StyledTableCell >
                   <Box display='flex' >
-                    <EditBus setToggle={setToggle} toggle={toggle} data={row}/>
-                    <BusDeleteDialog id={row._id} setToggle={setToggle} toggle={toggle}/>
+                    <EditRoute setToggle={setToggle} toggle={toggle} data={busRoute} />
+                    <RouteDeleteDialog id={busRoute._id} setToggle={setToggle} toggle={toggle}/>
                   </Box>
                 </StyledTableCell>
               </StyledTableRow>
-            ))}
+            ))} 
           </TableBody>
         </Table>
       </TableContainer>
 
 
     </div>
+    
   )
 }
 
-export default View
+export default BusRoutes

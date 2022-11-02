@@ -37,24 +37,26 @@ const statuses = [
 ]
 
 
-export default function Add({handleOpen,handleClose,setToggle,toggle,open,setOpen}) {  
+export default function Add({ handleOpen, handleClose, setToggle, toggle, open, setOpen }) {
 
   const [busNo, setBusNo] = React.useState('')
   const [busName, setBusName] = React.useState('');
+  const [route, setRoute] = React.useState('');
   const [model, setbusmodel] = React.useState('');
   const [capacity, setCapacity] = React.useState('');
   const [status, setStatus] = React.useState('')
 
+  const [busRoute, setBusRoute] = React.useState([])
+
   const onSubmit = (e) => {
     const bus = {
       BusNo: busNo,
+      routeNo: route,
       BusName: busName,
       Model: model,
       Capacity: capacity,
       Status: status
     };
-
-    console.log('bus',bus)
 
     axios.post('http://localhost:5000/bus/add', bus)
       .then(() => {
@@ -65,6 +67,20 @@ export default function Add({handleOpen,handleClose,setToggle,toggle,open,setOpe
       .catch((err) => console.log(err))
   }
 
+  React.useEffect(() => {
+    axios.get('http://localhost:5000/route/')
+      .then((res) => {
+        let arr = res.data;
+        let i;
+        let list = [];
+        for (i = 0; i < arr.length; i++) {
+          list.push({ label: arr[i].routeNo, value: arr[i].routeNo });
+        }
+        setBusRoute(list)
+      })
+      .catch((err) => console.log(err))
+  }, [])
+
   const handleClear = (e) => {
     e.preventDefault()
     setBusNo('')
@@ -72,6 +88,7 @@ export default function Add({handleOpen,handleClose,setToggle,toggle,open,setOpe
     setbusmodel('')
     setCapacity('')
     setStatus('')
+    setRoute('')
   }
 
   return (
@@ -88,32 +105,50 @@ export default function Add({handleOpen,handleClose,setToggle,toggle,open,setOpe
           <Typography sx={{ color: 'blue' }} id="keep-mounted-modal-title" variant="h6" align='center' component="h2">
             Add Bus
           </Typography>
-            <TextField sx={{ width: '100%' }} InputProps={{ sx: { height: 40 } }} onChange={(e) => { setBusNo(e.target.value) }} label='Bus No' margin="normal" variant="outlined" value={busNo} />
-            <TextField sx={{ width: '100%' }} InputProps={{ sx: { height: 40 } }} onChange={(e) => { setBusName(e.target.value) }} margin="normal" label="Bus Name" variant="outlined" value={busName} />
-            <TextField sx={{ width: '100%' }} InputProps={{ sx: { height: 40 } }} onChange={(e) => { setbusmodel(e.target.value) }} margin="normal" label="Model" variant="outlined" value={model} />
-            <TextField sx={{ width: '100%' }} InputProps={{ sx: { height: 40 } }} onChange={(e) => { setCapacity(e.target.value) }} margin="normal" label="Capacity" variant="outlined" value={capacity} />
-            <TextField
-              id="outlined-select-currency"
-              select
-              label="Select"
-              value={status}
-              defaultValue=''
-              onChange={(e) => { setStatus(e.target.value) }}
-              helperText="Please select bus status"
-              sx={{ width: '100%' }}
-              InputProps={{ sx: { height: 40 } }}
-              margin="normal"
-            >
-              {statuses.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </TextField>
-            <Box sx={{display:'flex', justifyContent:'space-around'}}>
-              <Button variant='contained' onClick={handleClear}>Clear</Button>
-              <Button type='submit' variant='contained' onClick={onSubmit}>Submit</Button>
-            </Box>
+          <TextField sx={{ width: '100%' }} InputProps={{ sx: { height: 40 } }} onChange={(e) => { setBusNo(e.target.value) }} label='Bus No' margin="normal" variant="outlined" value={busNo} />
+          <TextField
+            id="outlined-select-currency"
+            select
+            label="Select"
+            value={route}
+            defaultValue=''
+            onChange={(e) => { setRoute(e.target.value) }}
+            helperText="Please select bus route No"
+            sx={{ width: '100%' }}
+            InputProps={{ sx: { height: 40 } }}
+            margin="normal"
+          >
+            {busRoute.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField sx={{ width: '100%' }} InputProps={{ sx: { height: 40 } }} onChange={(e) => { setBusName(e.target.value) }} margin="normal" label="Bus Name" variant="outlined" value={busName} />
+          <TextField sx={{ width: '100%' }} InputProps={{ sx: { height: 40 } }} onChange={(e) => { setbusmodel(e.target.value) }} margin="normal" label="Model" variant="outlined" value={model} />
+          <TextField sx={{ width: '100%' }} InputProps={{ sx: { height: 40 } }} onChange={(e) => { setCapacity(e.target.value) }} margin="normal" label="Capacity" variant="outlined" value={capacity} />
+          <TextField
+            id="outlined-select-currency"
+            select
+            label="Select"
+            value={status}
+            defaultValue=''
+            onChange={(e) => { setStatus(e.target.value) }}
+            helperText="Please select bus status"
+            sx={{ width: '100%' }}
+            InputProps={{ sx: { height: 40 } }}
+            margin="normal"
+          >
+            {statuses.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {option.label}
+              </MenuItem>
+            ))}
+          </TextField>
+          <Box sx={{ display: 'flex', justifyContent: 'space-around',mt:'30px' }}>
+            <Button variant='contained' onClick={handleClear} color='secondary'>Clear</Button>
+            <Button type='submit' variant='contained' onClick={onSubmit}>Submit</Button>
+          </Box>
         </Box>
 
       </Modal>

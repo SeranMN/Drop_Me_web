@@ -9,10 +9,11 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { Box } from '@mui/material';
 import axios from 'axios';
 
-const BusDeleteDialog = ({ id,setToggle,toggle }) => {
+const RouteDeleteDialog = ({id,setToggle,toggle}) => {
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
+        console.log('id',id)
         setOpen(true);
     };
 
@@ -21,13 +22,14 @@ const BusDeleteDialog = ({ id,setToggle,toggle }) => {
     };
 
     const handleDelete = () => {
-        axios.delete(`http://localhost:5000/bus/delete/${id}`)
-        .then(() => {
-          alert('deleted successfully')
-          setToggle(!toggle)
-          handleClose()
-        })
-        .catch((err) => console.log(err))
+        console.log('id',id)
+        // axios.delete(`http://localhost:5000/route/delete/${id}`)
+        //     .then(() => {
+        //         alert('deleted successfully')
+        //         setToggle(!toggle)
+        //         handleClose()
+        //     })
+        //     .catch((err) => console.log(err))
     }
 
     return (
@@ -56,7 +58,7 @@ const BusDeleteDialog = ({ id,setToggle,toggle }) => {
                 </DialogContent>
                 <DialogActions>
                     <Box>
-                        <Button sx={{mr:'100px'}} variant='contained' onClick={handleClose}>cancel</Button>
+                        <Button sx={{ mr: '100px' }} variant='contained' onClick={handleClose}>cancel</Button>
                         <Button variant='contained' color='error' onClick={handleDelete} autoFocus>
                             Delete
                         </Button>
@@ -68,4 +70,4 @@ const BusDeleteDialog = ({ id,setToggle,toggle }) => {
     )
 }
 
-export default BusDeleteDialog
+export default RouteDeleteDialog

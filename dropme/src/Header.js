@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -12,17 +12,19 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useNavigate } from 'react-router-dom';
-import { Outlet } from 'react-router';
+import Logo from './images/drop me logo.png'
+import { Outlet } from 'react-router-dom';
 
-const Header = () => {
-    const pages = ['Products', 'Pricing', 'Blog'];
-    const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+
+const pages = ['Products', 'Pricing', 'Blog'];
+const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+
+function Header() {
     const navigate = useNavigate()
 
-    const [anchorElNav, setAnchorElNav] = useState(null);
-    const [anchorElUser, setAnchorElUser] = useState(null);
+    const [anchorElNav, setAnchorElNav] = React.useState(null);
+    const [anchorElUser, setAnchorElUser] = React.useState(null);
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -39,12 +41,14 @@ const Header = () => {
         setAnchorElUser(null);
     };
 
-
     return (
         <>
-            <AppBar sx={{ boxShadow: 'none' }} color='transparent' position="static">
+            <AppBar position="static" color='transparent'>
+
                 <Container maxWidth="xl">
                     <Toolbar disableGutters>
+
+                        <img src={Logo} style={{ width: '170px', marginRight: '100px' }} />
                         <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
                             <IconButton
                                 size="large"
@@ -100,46 +104,49 @@ const Header = () => {
                         >
                             LOGO
                         </Typography>
-                        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex', marginLeft: '300px', justifyContent: 'center' } }}>
+                        <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+
+
+
                             <Button
                                 onClick={() => navigate('/')}
-                                sx={{ my: 2, color: 'black', display: 'block' }}
+                                sx={{ textTransform: 'none', fontWeight: 700, my: 2, fontSize: 22, color: 'black', display: 'block' }}
                             >
                                 DashBoard
                             </Button>
                             <Button
                                 onClick={() => navigate('/buses')}
-                                sx={{ my: 2, color: 'black', display: 'block' }}
+                                sx={{ textTransform: 'none', fontWeight: 700, my: 2, fontSize: 22, color: 'black', display: 'block' }}
                             >
                                 Buses
                             </Button>
                             <Button
                                 onClick={() => navigate('/routes')}
-                                sx={{ my: 2, color: 'black', display: 'block' }}
+                                sx={{ textTransform: 'none', fontWeight: 700, my: 2, fontSize: 22, color: 'black' }}
                             >
                                 Routes
                             </Button>
                             <Button
                                 onClick={() => navigate('/timetable')}
-                                sx={{ my: 2, color: 'black', display: 'block' }}
+                                sx={{ textTransform: 'none', fontWeight: 700, my: 2, fontSize: 22, color: 'black', display: 'block' }}
                             >
                                 Timetable
                             </Button>
                             <Button
                                 onClick={() => navigate('/journey')}
-                                sx={{ my: 2, color: 'black', display: 'block' }}
+                                sx={{ textTransform: 'none', fontWeight: 700, my: 2, fontSize: 22, color: 'black', display: 'block' }}
                             >
                                 Journey
                             </Button>
                             <Button
                                 onClick={() => navigate('/token')}
-                                sx={{ my: 2, color: 'black', display: 'block' }}
+                                sx={{ textTransform: 'none', fontWeight: 700, my: 2, fontSize: 22, color: 'black', display: 'block' }}
                             >
                                 Token
                             </Button>
                             <Button
                                 onClick={() => navigate('/report')}
-                                sx={{ my: 2, color: 'black', display: 'block' }}
+                                sx={{ textTransform: 'none', fontWeight: 700, my: 2, fontSize: 22, color: 'black', display: 'block' }}
                             >
                                 Report
                             </Button>
@@ -148,7 +155,7 @@ const Header = () => {
                         <Box sx={{ flexGrow: 0 }}>
                             <Tooltip title="Open settings">
                                 <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                    <AccountCircleIcon fontSize='large' />
+                                    <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
                                 </IconButton>
                             </Tooltip>
                             <Menu
@@ -176,11 +183,9 @@ const Header = () => {
                         </Box>
                     </Toolbar>
                 </Container>
-            </AppBar>
+            </AppBar >
             <Outlet />
         </>
-
-    )
+    );
 }
-
-export default Header
+export default Header;

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
@@ -7,7 +7,6 @@ import { TextField } from '@mui/material';
 import MenuItem from '@mui/material/MenuItem';
 import axios from 'axios';
 import AddIcon from '@mui/icons-material/Add';
-import { height } from '@mui/system';
 
 const style = {
     position: 'absolute',
@@ -25,35 +24,25 @@ const textFieldStyle = {
     margin: 2,
     width: 300,
 }
-const statuses = [
-    {
-        value: 'Runing',
-        label: 'Runing'
-    },
-    {
-        value: 'Not Runing',
-        label: 'Not Runing'
+
+const AddTimetable = ({ setToggle, toggle }) => {
+
+    const [open, setOpen] = useState(false)
+
+    const handleOpen = (row) => {
+        setOpen(true)
     }
-]
+    const handleClose = () => setOpen(false);
 
-
-export default function EditBus({ setToggle, toggle, data }) {
-
-    const [busNo, setBusNo] = React.useState(data ? data.BusNo : '')
-    const [busName, setBusName] = React.useState(data ? data.BusName : '');
-    const [route, setRoute] = React.useState(data ? data.routeNo :'');
-    const [model, setbusmodel] = React.useState(data ? data.Model : '');
-    const [capacity, setCapacity] = React.useState(data ? data.Capacity : '');
-    const [status, setStatus] = React.useState(data ? data.Status : '')
-    const [open1, setOpen1] = React.useState(false)
-
+    const [route, setRoute] = useState('');
+    const [busNo, setBusNo] = useState('');
+    const [busName, setBusName] = useState('');
+    const [start, setStart] = useState('');
+    const [end, setEnd] = useState('');
     const [busRoute, setBusRoute] = React.useState([])
+    const [bus, setBus] = React.useState([])
 
-    const handleOpen1 = () => {
-        setOpen1(true)
-    }
 
-    const handleClose1 = () => setOpen1(false);
 
     React.useEffect(() => {
         axios.get('http://localhost:5000/route/')
@@ -69,51 +58,72 @@ export default function EditBus({ setToggle, toggle, data }) {
             .catch((err) => console.log(err))
     }, [])
 
+    React.useEffect(() => {
+        axios.get('http://localhost:5000/bus/')
+            .then((res) => {
+                let arr = res.data;
+                let i;
+                let list = [];
+                for (i = 0; i < arr.length; i++) {
+                    list.push({ label: arr[i].routeNo, value: arr[i].routeNo });
+                }
+                setBus(list)
+            })
+            .catch((err) => console.log(err))
+    }, [])
+
     const onSubmit = (e) => {
-        const bus = {
-            BusNo: busNo,
-            routeNo: route,
-            BusName: busName,
-            Model: model,
-            Capacity: capacity,
-            Status: status
+        const dataRoute = {
+
         };
+        console.log('dataRoute', dataRoute)
 
-        console.log('bus', bus)
-
-        axios.put(`http://localhost:5000/bus/edit/${data._id}`, bus)
+        axios.post('http://localhost:5000/route/add', dataRoute)
             .then(() => {
-                alert('Edited successfully')
+                alert('Added successfully')
                 setToggle(!toggle)
-                handleClose1()
+                handleClose()
             })
             .catch((err) => console.log(err))
     }
 
     const handleClear = (e) => {
         e.preventDefault()
-        setBusNo('')
-        setBusName('')
-        setbusmodel('')
-        setCapacity('')
-        setStatus('')
+
     }
 
     return (
         <div>
-            <Button onClick={handleOpen1} variant='contained'>Edit</Button>
+            <Button onClick={handleOpen} variant="contained" startIcon={<AddIcon />} >Add Timetable</Button>
             <Modal
                 keepMounted
-                open={open1}
-                onClose={handleClose1}
+                open={open}
+                onClose={handleClose}
                 aria-labelledby="keep-mounted-modal-title"
                 aria-describedby="keep-mounted-modal-description"
             >
                 <Box sx={style}>
                     <Typography sx={{ color: 'blue' }} id="keep-mounted-modal-title" variant="h6" align='center' component="h2">
-                        Edit Bus
+                        Add Timetable
                     </Typography>
-                    <TextField sx={{ width: '100%' }} InputProps={{ sx: { height: 40 } }} onChange={(e) => { setBusNo(e.target.value) }} label='Bus No' margin="normal" variant="outlined" value={busNo} />
+                    <TextField
+                        id="outlined-select-currency"
+                        select
+                        label="Select"
+                        value={busNo}
+                        defaultValue=''
+                        onChange={(e) => { setBusNo(e.target.value) }}
+                        helperText="Please select bus No"
+                        sx={{ width: '100%' }}
+                        InputProps={{ sx: { height: 40 } }}
+                        margin="normal"
+                    >
+                        {bus.map((option) => (
+                            <MenuItem key={option.value} value={option.value}>
+                                {option.label}
+                            </MenuItem>
+                        ))}
+                    </TextField>
                     <TextField
                         id="outlined-select-currency"
                         select
@@ -132,34 +142,18 @@ export default function EditBus({ setToggle, toggle, data }) {
                             </MenuItem>
                         ))}
                     </TextField>
-                    <TextField sx={{ width: '100%' }} InputProps={{ sx: { height: 40 } }} onChange={(e) => { setBusName(e.target.value) }} margin="normal" label="Bus Name" variant="outlined" value={busName} />
-                    <TextField sx={{ width: '100%' }} InputProps={{ sx: { height: 40 } }} onChange={(e) => { setbusmodel(e.target.value) }} margin="normal" label="Model" variant="outlined" value={model} />
-                    <TextField sx={{ width: '100%' }} InputProps={{ sx: { height: 40 } }} onChange={(e) => { setCapacity(e.target.value) }} margin="normal" label="Capacity" variant="outlined" value={capacity} />
-                    <TextField
-                        id="outlined-select-currency"
-                        select
-                        label="Select"
-                        value={status}
-                        defaultValue=''
-                        onChange={(e) => { setStatus(e.target.value) }}
-                        helperText="Please select bus status"
-                        sx={{ width: '100%' }}
-                        InputProps={{ sx: { height: 40 } }}
-                        margin="normal"
-                    >
-                        {statuses.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                            </MenuItem>
-                        ))}
-                    </TextField>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
+                    <TextField sx={{ width: '100%' }} InputProps={{ sx: { height: 40 } }} onChange={(e) => { setStart(e.target.value) }} margin="normal" label="Start Time" variant="outlined" value={start} />
+                    <TextField sx={{ width: '100%' }} InputProps={{ sx: { height: 40 } }} onChange={(e) => { setEnd(e.target.value) }} margin="normal" label="End Time" variant="outlined" value={end} />
+
+                    <Box sx={{ display: 'flex', justifyContent: 'space-around',mt:'30px'  }}>
                         <Button color='secondary' variant='contained' onClick={handleClear}>Clear</Button>
-                        <Button type='submit' variant='contained' onClick={onSubmit}>Edit</Button>
+                        <Button type='submit' variant='contained' onClick={onSubmit}>Add</Button>
                     </Box>
                 </Box>
 
             </Modal>
         </div>
-    );
+    )
 }
+
+export default AddTimetable
