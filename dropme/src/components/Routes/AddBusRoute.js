@@ -48,7 +48,7 @@ const AddBusRoute = ({ setToggle, toggle }) => {
         };
         console.log('dataRoute',dataRoute)
 
-        axios.post('http://localhost:5000/route/add', dataRoute)
+        axios.post('https://dropmebackend.herokuapp.com/route/add', dataRoute)
             .then(() => {
                 alert('Added successfully')
                 setToggle(!toggle)

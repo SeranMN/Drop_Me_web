@@ -23,13 +23,13 @@ const RouteDeleteDialog = ({id,setToggle,toggle}) => {
 
     const handleDelete = () => {
         console.log('id',id)
-        // axios.delete(`http://localhost:5000/route/delete/${id}`)
-        //     .then(() => {
-        //         alert('deleted successfully')
-        //         setToggle(!toggle)
-        //         handleClose()
-        //     })
-        //     .catch((err) => console.log(err))
+        axios.delete(`https://dropmebackend.herokuapp.com/route/delete/${id}`)
+            .then(() => {
+                alert('deleted successfully')
+                setToggle(!toggle)
+                handleClose()
+            })
+            .catch((err) => console.log(err))
     }
 
     return (

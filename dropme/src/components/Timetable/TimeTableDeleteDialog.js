@@ -9,10 +9,12 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import { Box } from '@mui/material';
 import axios from 'axios';
 
-const BusDeleteDialog = ({ id,setToggle,toggle }) => {
+const TimeTableDeleteDialog = ({id,setToggle,toggle}) => {
+
     const [open, setOpen] = React.useState(false);
 
     const handleClickOpen = () => {
+        console.log('id', id)
         setOpen(true);
     };
 
@@ -21,16 +23,15 @@ const BusDeleteDialog = ({ id,setToggle,toggle }) => {
     };
 
     const handleDelete = () => {
-        console.log(id)
-        axios.delete(`https://dropmebackend.herokuapp.com/bus/delete/${id}`)
-        .then(() => {
-          alert('deleted successfully')
-          setToggle(!toggle)
-          handleClose()
-        })
-        .catch((err) => console.log(err))
+        console.log('id', id)
+        axios.delete(`http://localhost:5000/timetable/delete/${id}`)
+            .then(() => {
+                alert('deleted successfully')
+                setToggle(!toggle)
+                handleClose()
+            })
+            .catch((err) => console.log(err))
     }
-
     return (
         <div>
             <Button sx={{ marginLeft: '4px' }} variant='contained' color="error" onClick={handleClickOpen}>Delete</Button>
@@ -57,7 +58,7 @@ const BusDeleteDialog = ({ id,setToggle,toggle }) => {
                 </DialogContent>
                 <DialogActions>
                     <Box>
-                        <Button sx={{mr:'100px'}} variant='contained' onClick={handleClose}>cancel</Button>
+                        <Button sx={{ mr: '100px' }} variant='contained' onClick={handleClose}>cancel</Button>
                         <Button variant='contained' color='error' onClick={handleDelete} autoFocus>
                             Delete
                         </Button>
@@ -65,8 +66,7 @@ const BusDeleteDialog = ({ id,setToggle,toggle }) => {
                 </DialogActions>
             </Dialog>
         </div>
-
     )
 }
 
-export default BusDeleteDialog
+export default TimeTableDeleteDialog

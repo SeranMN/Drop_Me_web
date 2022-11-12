@@ -46,7 +46,7 @@ const EditRoute = ({ setToggle, toggle, data }) => {
         };
         console.log('dataRoute', dataRoute)
 
-        axios.put(`http://localhost:5000/route/edit/${data._id}`, dataRoute)
+        axios.put(`https://dropmebackend.herokuapp.com/route/edit/${data._id}`, dataRoute)
             .then(() => {
                 alert('Edited successfully')
                 setToggle(!toggle)
@@ -75,7 +75,7 @@ const EditRoute = ({ setToggle, toggle, data }) => {
             >
                 <Box sx={style}>
                     <Typography sx={{ color: 'blue' }} id="keep-mounted-modal-title" variant="h6" align='center' component="h2">
-                        Add Routes
+                        Edit Route
                     </Typography>
                     <TextField sx={{ width: '100%' }} InputProps={{ sx: { height: 40 } }} onChange={(e) => { setRoute(e.target.value) }} margin="normal" label="Route" variant="outlined" value={route} />
                     <TextField sx={{ width: '100%' }} InputProps={{ sx: { height: 40 } }} onChange={(e) => { setFrom(e.target.value) }} margin="normal" label="From" variant="outlined" value={from} />

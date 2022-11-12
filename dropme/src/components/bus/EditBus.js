@@ -56,7 +56,7 @@ export default function EditBus({ setToggle, toggle, data }) {
     const handleClose1 = () => setOpen1(false);
 
     React.useEffect(() => {
-        axios.get('http://localhost:5000/route/')
+        axios.get('https://dropmebackend.herokuapp.com/route/')
             .then((res) => {
                 let arr = res.data;
                 let i;
@@ -81,7 +81,7 @@ export default function EditBus({ setToggle, toggle, data }) {
 
         console.log('bus', bus)
 
-        axios.put(`http://localhost:5000/bus/edit/${data._id}`, bus)
+        axios.put(`https://dropmebackend.herokuapp.com/bus/edit/${data._id}`, bus)
             .then(() => {
                 alert('Edited successfully')
                 setToggle(!toggle)

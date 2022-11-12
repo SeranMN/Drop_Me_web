@@ -139,12 +139,6 @@ function Header() {
                                 Journey
                             </Button>
                             <Button
-                                onClick={() => navigate('/token')}
-                                sx={{ textTransform: 'none', fontWeight: 700, my: 2, fontSize: 22, color: 'black', display: 'block' }}
-                            >
-                                Token
-                            </Button>
-                            <Button
                                 onClick={() => navigate('/report')}
                                 sx={{ textTransform: 'none', fontWeight: 700, my: 2, fontSize: 22, color: 'black', display: 'block' }}
                             >

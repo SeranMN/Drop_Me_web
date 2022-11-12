@@ -23,11 +23,39 @@ const View = () => {
   const [open, setOpen] = useState(false)
 
   const [toggle, setToggle] = useState(false)
+  const [buses, setBuses] = useState([])
 
-  const handleOpen = (row) =>{ 
+
+  const handleOpen = (row) => {
     setOpen(true)
   }
   const handleClose = () => setOpen(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const findEvents = (busName) => {
+    if (busName) {
+      axios.get(`http://localhost:5000/bus/search/${busName}`)
+
+        .then((res) => {
+          let arr = res.data;
+          let i;
+          let list = [];
+          for (i = 0; i < arr.length; i++) {
+            list.push(arr[i]);
+          }
+          setBuses(list)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+    }
+  };
+
+  const handleChange = (e) => {
+    findEvents(e.target.value)
+    setSearchTerm(e.target.value);
+  }
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -49,15 +77,16 @@ const View = () => {
     },
   }));
 
-  const [buses, setBuses] = useState([])
   useEffect(() => {
-    axios.get('http://localhost:5000/bus/')
-      .then((res) => { setBuses(res.data) })
-      .catch((err) => console.log(err))
-  }, [toggle])
+    if (!searchTerm) {
+      axios.get('https://dropmebackend.herokuapp.com/bus/')
+        .then((res) => { setBuses(res.data) })
+        .catch((err) => console.log(err))
+    }
+  }, [toggle,searchTerm])
 
   return (
-    <div style={{marginTop:'20px'}}>
+    <div style={{ marginTop: '20px' }}>
       <Typography sx={{ color: 'blue' }} variant='h4' align='center'>Dashboard - Manage Buses</Typography>
       <Paper
         component="form"
@@ -71,6 +100,8 @@ const View = () => {
           sx={{ ml: 1, flex: 1 }}
           placeholder="Search by bus Name"
           inputProps={{ 'aria-label': 'search Events' }}
+          value={searchTerm}
+          onChange={handleChange}
         />
       </Paper>
       <Box sx={{ mx: '25px', display: 'flex', justifyContent: 'flex-end' }}>
@@ -103,8 +134,8 @@ const View = () => {
                 <StyledTableCell >{row.Status}</StyledTableCell>
                 <StyledTableCell >
                   <Box display='flex' >
-                    <EditBus setToggle={setToggle} toggle={toggle} data={row}/>
-                    <BusDeleteDialog id={row._id} setToggle={setToggle} toggle={toggle}/>
+                    <EditBus setToggle={setToggle} toggle={toggle} data={row} />
+                    <BusDeleteDialog id={row._id} setToggle={setToggle} toggle={toggle} />
                   </Box>
                 </StyledTableCell>
               </StyledTableRow>

@@ -20,7 +20,7 @@ import RouteDeleteDialog from './RouteDeleteDialog';
 
 const BusRoutes = () => {
 
-  const [busRoutes,setBusRoutes] = useState([])
+  const [busRoutes, setBusRoutes] = useState([])
   const [toggle, setToggle] = useState(false)
 
   const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -43,17 +43,47 @@ const BusRoutes = () => {
     },
   }));
 
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const findRoutes = (route) => {
+    if (route) {
+      axios.get(`http://localhost:5000/route/search/${route}`)
+
+        .then((res) => {
+          let arr = res.data;
+          let i;
+          let list = [];
+          for (i = 0; i < arr.length; i++) {
+            list.push(arr[i]);
+          }
+          console.log('list', list)
+          setBusRoutes(list)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+    }
+  };
+
+  const handleChange = (e) => {
+    findRoutes(e.target.value)
+    setSearchTerm(e.target.value);
+  }
+
   useEffect(() => {
-    axios.get('http://localhost:5000/route/')
-      .then((res) => { 
-        setBusRoutes(res.data) 
-        console.log('res.data',res.data)
-      })
-      .catch((err) => console.log(err))
-  }, [toggle])
+    if (!searchTerm) {
+      axios.get('https://dropmebackend.herokuapp.com/route/')
+        .then((res) => {
+          setBusRoutes(res.data)
+          console.log('res.data', res.data)
+        })
+        .catch((err) => console.log(err))
+    }
+  }, [toggle,searchTerm])
 
   return (
-    <div style={{marginTop:'20px'}}>
+    <div style={{ marginTop: '20px' }}>
       <Typography sx={{ color: 'blue' }} variant='h4' align='center'>Dashboard - Manage Route</Typography>
       <Paper
         component="form"
@@ -67,6 +97,8 @@ const BusRoutes = () => {
           sx={{ ml: 1, flex: 1 }}
           placeholder="Search by bus Name"
           inputProps={{ 'aria-label': 'search Events' }}
+          value={searchTerm}
+          onChange={handleChange}
         />
       </Paper>
       <Box sx={{ mx: '25px', display: 'flex', justifyContent: 'flex-end' }}>
@@ -85,7 +117,7 @@ const BusRoutes = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-           {busRoutes.map((busRoute) => (
+            {busRoutes.map((busRoute) => (
               <StyledTableRow key={busRoute._id}>
                 <StyledTableCell >
                   {busRoute.routeNo}
@@ -97,18 +129,18 @@ const BusRoutes = () => {
                 <StyledTableCell >
                   <Box display='flex' >
                     <EditRoute setToggle={setToggle} toggle={toggle} data={busRoute} />
-                    <RouteDeleteDialog id={busRoute._id} setToggle={setToggle} toggle={toggle}/>
+                    <RouteDeleteDialog id={busRoute._id} setToggle={setToggle} toggle={toggle} />
                   </Box>
                 </StyledTableCell>
               </StyledTableRow>
-            ))} 
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
 
 
     </div>
-    
+
   )
 }
 

@@ -45,6 +45,8 @@ export default function Add({ handleOpen, handleClose, setToggle, toggle, open, 
   const [model, setbusmodel] = React.useState('');
   const [capacity, setCapacity] = React.useState('');
   const [status, setStatus] = React.useState('')
+  const [password, setPassword] = React.useState('')
+  const [price, setPrice] = React.useState('')
 
   const [busRoute, setBusRoute] = React.useState([])
 
@@ -55,20 +57,32 @@ export default function Add({ handleOpen, handleClose, setToggle, toggle, open, 
       BusName: busName,
       Model: model,
       Capacity: capacity,
-      Status: status
+      Status: status,
+      Price: price
     };
 
-    axios.post('http://localhost:5000/bus/add', bus)
+    const busLogin = {
+      email: busNo,
+      role: 'bus',
+      password: password,
+    };
+
+    axios.post('https://dropmebackend.herokuapp.com/bus/add', bus)
       .then(() => {
         alert('Added successfully')
         setToggle(!toggle)
         handleClose()
       })
       .catch((err) => console.log(err))
+
+    axios.post('https://dropmebackend.herokuapp.com/login/add', busLogin)
+      .then(() => {
+      })
+      .catch((err) => console.log(err))
   }
 
   React.useEffect(() => {
-    axios.get('http://localhost:5000/route/')
+    axios.get('https://dropmebackend.herokuapp.com/route/')
       .then((res) => {
         let arr = res.data;
         let i;
@@ -127,6 +141,7 @@ export default function Add({ handleOpen, handleClose, setToggle, toggle, open, 
           <TextField sx={{ width: '100%' }} InputProps={{ sx: { height: 40 } }} onChange={(e) => { setBusName(e.target.value) }} margin="normal" label="Bus Name" variant="outlined" value={busName} />
           <TextField sx={{ width: '100%' }} InputProps={{ sx: { height: 40 } }} onChange={(e) => { setbusmodel(e.target.value) }} margin="normal" label="Model" variant="outlined" value={model} />
           <TextField sx={{ width: '100%' }} InputProps={{ sx: { height: 40 } }} onChange={(e) => { setCapacity(e.target.value) }} margin="normal" label="Capacity" variant="outlined" value={capacity} />
+          <TextField sx={{ width: '100%' }} InputProps={{ sx: { height: 40 } }} onChange={(e) => { setPrice(e.target.value) }} margin="normal" label="Bus Fare" variant="outlined" value={price} />
           <TextField
             id="outlined-select-currency"
             select
@@ -145,7 +160,8 @@ export default function Add({ handleOpen, handleClose, setToggle, toggle, open, 
               </MenuItem>
             ))}
           </TextField>
-          <Box sx={{ display: 'flex', justifyContent: 'space-around',mt:'30px' }}>
+          <TextField type='password' sx={{ width: '100%' }} InputProps={{ sx: { height: 40 } }} onChange={(e) => { setPassword(e.target.value) }} margin="normal" label="Password" variant="outlined" value={password} />
+          <Box sx={{ display: 'flex', justifyContent: 'space-around', mt: '30px' }}>
             <Button variant='contained' onClick={handleClear} color='secondary'>Clear</Button>
             <Button type='submit' variant='contained' onClick={onSubmit}>Submit</Button>
           </Box>

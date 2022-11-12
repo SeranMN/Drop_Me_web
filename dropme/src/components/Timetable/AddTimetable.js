@@ -45,7 +45,7 @@ const AddTimetable = ({ setToggle, toggle }) => {
 
 
     React.useEffect(() => {
-        axios.get('http://localhost:5000/route/')
+        axios.get('https://dropmebackend.herokuapp.com/route/')
             .then((res) => {
                 let arr = res.data;
                 let i;
@@ -59,7 +59,7 @@ const AddTimetable = ({ setToggle, toggle }) => {
     }, [])
 
     React.useEffect(() => {
-        axios.get('http://localhost:5000/bus/')
+        axios.get('https://dropmebackend.herokuapp.com/bus/')
             .then((res) => {
                 let arr = res.data;
                 let i;
@@ -73,12 +73,14 @@ const AddTimetable = ({ setToggle, toggle }) => {
     }, [])
 
     const onSubmit = (e) => {
-        const dataRoute = {
-
+        const timetable = {
+            ArrivalTime: start,
+            Depaturetime: end,
+            busNo: busNo,
+            routeNo: route,
         };
-        console.log('dataRoute', dataRoute)
 
-        axios.post('http://localhost:5000/route/add', dataRoute)
+        axios.post('https://dropmebackend.herokuapp.com/timetable/add', timetable)
             .then(() => {
                 alert('Added successfully')
                 setToggle(!toggle)
